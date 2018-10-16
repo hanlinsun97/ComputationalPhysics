@@ -11,7 +11,7 @@ def initializer(initial_condition, lattice_size):
             for j in range(lattice_size):
                 if lattice[i][j] == 0:
                     lattice[i][j] = -1
-    elif intial_condition is "LowTemperature":
+    elif initial_condition is "LowTemperature":
         lattice = np.ones([lattice_size, lattice_size])
     return lattice
 
@@ -75,21 +75,23 @@ def Avg_magnettorque(lattice, lattice_size):
 if __name__ == "__main__":
     
     # T = 10
-    lattice_size = 5
-    initial_condition = "HighTemperature"
-    experiment_time = 100000
+    lattice_size = 100
+    initial_condition = "LowTemperature"
+    experiment_time = 500000
     Temp = []
     Mag = []
-    for T in np.arange(0.1, 1, 0.1):
+    for T in np.arange(1, 3, 0.01):
         print(T)
         lattice = initializer(initial_condition, lattice_size)
         for time in range(experiment_time):
             coordinate = coordinate_generator(lattice_size)
             _, _, diff = energy_function(coordinate, lattice)
+            # print(diff)
             lattice = decision_maker(coordinate, lattice, diff, T)
-            mag = Avg_magnettorque(lattice, lattice_size)
-            # if time % 100 == 0:
-            #     print(mag)
+            if time % 1000 == 0:
+                mag = Avg_magnettorque(lattice, lattice_size)
+                print(mag)
+  
         mag = abs(mag)
         Temp.append(T)
         Mag.append(mag)
